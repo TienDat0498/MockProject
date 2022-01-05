@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small_margin">12dp</dimen>
+    <dimen name="normal_margin">24dp</dimen>
+    <dimen name="large_margin">48dp</dimen>
+
+    <dimen name="button_radius">16dp</dimen>
+    <dimen name="button_size">72dp</dimen>
+
+    <dimen name="text_size_super_small">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_normal">24sp</dimen>
+    <dimen name="text_size_large">56sp</dimen>
+
+    <dimen name="icon_normal_size">24dp</dimen>
+    <dimen name="icon_small_size">12dp</dimen>
+    <dimen name="icon_large_size">48dp</dimen>
+    <dimen name="icon_very_large_size">96dp</dimen>
+</resources>
