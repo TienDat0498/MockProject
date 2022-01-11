@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">CategorySlide</string>
-    <string name="text_category_value">$ %s</string>
-    <string name="previous">Previous</string>
-    <string name="next">Next</string>
+    <string name="app_name">Mock Project Final</string>
+    <string name="save">Save</string>
+    <string name="set_up_a_monthly_budget_goal">Set up a monthly \nbudget goal</string>
+    <string name="total_budget_is_1500">Total budget is <b>$ 1500</b></string>
+    <string name="_400">$ <font color="#000000">400</font></string>
+    <string name="money_text">$ %s</string>
+    <string name="money_sign">$</string>
+    <string name="normal">Normal</string>
+    <string name="it_s_ok_to_eat_at_your_placeup_to_5_of_economy">It\'s ok to eat at your place\nUp to 5% of economy</string>
+    <string name="_0">0</string>
 </resources>
