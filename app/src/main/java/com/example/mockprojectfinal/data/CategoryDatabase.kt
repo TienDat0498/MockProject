@@ -12,17 +12,16 @@ abstract class CategoryDatabase : RoomDatabase() {
     abstract val categoryDao: CategoryDao
 
     companion object {
-        const val DATABASE_NAME ="category_database"
+        const val DATABASE_NAME = "category_database"
     }
 
-
-    fun initData(){
+    fun initData() {
         val job = Job()
         val coroutineScope = CoroutineScope(Dispatchers.Main + job)
-        if (categoryDao.count() == 0){
-            coroutineScope.launch {
-                withContext(Dispatchers.IO){
-                    for (singleItem in DefaultCategory.listSingleItem){
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                if (categoryDao.count() == 0) {
+                    for (singleItem in DefaultCategory.listSingleItem) {
                         categoryDao.insertCategory(Category.fromSingleItem(singleItem))
                     }
                 }

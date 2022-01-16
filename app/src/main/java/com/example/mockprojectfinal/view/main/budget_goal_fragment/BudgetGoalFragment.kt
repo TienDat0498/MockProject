@@ -1,42 +1,41 @@
 package com.example.mockprojectfinal.view.main.budget_goal_fragment
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.category_slider.CategoryScrollView
 import com.example.category_slider.SingleItem
-import com.example.mockprojectfinal.R
 import com.example.mockprojectfinal.databinding.FragmentBudgetGoalBinding
+import com.example.mockprojectfinal.utils.*
 import com.example.slidebar.SlideBarHorizontal
 import dagger.hilt.android.AndroidEntryPoint
-
-private val statusText = listOf<String>("Normal", "That's a lot", "Are you crazy")
-private val additionalInfoText = listOf<String>(
-    "It's ok to eat at your place\nUp to 5% of economy",
-    "Sometimes, you can eat in cafe\nUp to 3% of economy",
-    "Eat in restaurants everyday\nBlow off 30% of money"
-)
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 @AndroidEntryPoint
 class BudgetGoalFragment : Fragment() {
+    companion object {
+        const val FADE_ALPHA_MONEY_TEXT = 0.1f
+        const val FULL_ALPHA = 1f
+        const val LONG_ANIMATION_DURATION = 600L
+        const val ANCHOR_MAX_SCALE = 1.3f
+        const val ANCHOR_NORMAL_SCALE = 1f
+    }
+
     private val budgetGoalViewModel: BudgetGoalViewModel by viewModels()
 
     private lateinit var binding: FragmentBudgetGoalBinding
     private lateinit var textViewAlphaAnimator: ValueAnimator
     private var textViewMoneyAnimator: ValueAnimator? = null
+    private var anchorScaleAnimator: AnimatorSet? = null
     private val decelerateInterpolator = DecelerateInterpolator()
-    private var currentStatus = 0
-    private var curValue = 0
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,90 +48,125 @@ class BudgetGoalFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initAnimator()
         initObserver()
         initView()
-
     }
 
     private fun initObserver() {
-
-    }
-
-    private fun initView() {
-        textViewAlphaAnimator = ValueAnimator.ofFloat(binding.moneyText.alpha, 0.3f, 1f).apply {
-            addUpdateListener { updateAnimation ->
-                binding.moneyText.alpha = updateAnimation.animatedValue as Float
-            }
-            interpolator = decelerateInterpolator
-            duration = 600
-        }
-
-        val listData = listOf<SingleItem>(
-            SingleItem("Cafe", R.drawable.restaurant, 400, "#4238ed", "#2b22b6"),
-            SingleItem("House", R.drawable.home, 600, "#35e9d4", "#37dbc3"),
-            SingleItem("Taxi", R.drawable.taxi, 900, "#fcbc40", "#e8a82a"),
-            SingleItem("Gym", R.drawable.weightlifter, 500, "#FF8A65", "#FF5722"),
-            SingleItem("Love", R.drawable.relationship, 700, "#EF5350", "#E53935"),
-            SingleItem("Other", R.drawable.ic_other, 800, "#BDBDBD", "#757575"),
-        )
-        binding.horizontalScrollView.data = listData
-
-        binding.horizontalScrollView.onSwipeListener = object: CategoryScrollView.OnSwipeListener{
-            override fun onCategoryChange(item: SingleItem) {
-                curValue = item.value
-                updateMoneyTextView(curValue)
-                binding.sliderBar.curMoney = curValue.toFloat()
-            }
-        }
-
-        binding.sliderBar.curMoney = curValue.toFloat()
-
-        binding.sliderBar.setOnValueChangeListener(object :
-            SlideBarHorizontal.OnValueChangeListener {
-            override fun onValueChange(currentValue: Float) {
-                updateMoneyTextView(currentValue.toInt())
-                when(currentValue){
-                    in 0f..curValue.toFloat() -> {
-                        if (currentStatus!= 0) {
-                            binding.statusText.setText(statusText[0])
-                            binding.statusAdditionalText.setText(additionalInfoText[0])
-                            currentStatus = 0
-
-                        }
-
+        budgetGoalViewModel.listSingleItem.observe(viewLifecycleOwner, { listSingleItem ->
+            binding.horizontalScrollView.data = listSingleItem
+        })
+        budgetGoalViewModel.curStatus.observe(viewLifecycleOwner, { moneySpendInformation ->
+            when (moneySpendInformation) {
+                MoneySpendInformation.NORMAL -> {
+                    binding.statusTextNormal.showUpFromBottom()
+                    binding.statusAdditionalTextNormal.showUpFromBottom()
+                    if (budgetGoalViewModel.lastStatus == MoneySpendInformation.LOT) {
+                        binding.statusTextLot.getBackToTop()
+                        binding.statusAdditionalTextLot.getBackToTop()
+                    } else if (budgetGoalViewModel.lastStatus == MoneySpendInformation.CRAZY) {
+                        binding.statusTextCrazy.getBackToTop()
+                        binding.statusAdditionalTextCrazy.getBackToTop()
                     }
-                    in 1f*curValue.. 2f*curValue-> {
-                        if (currentStatus != 1){
-                            binding.statusText.setText(statusText[1])
-                            binding.statusAdditionalText.setText(additionalInfoText[1])
-                            currentStatus = 1
+                }
+                MoneySpendInformation.LOT -> {
+                    when (budgetGoalViewModel.lastStatus) {
+                        MoneySpendInformation.CRAZY -> {
+                            binding.statusTextLot.showUpFromBottom()
+                            binding.statusAdditionalTextLot.showUpFromBottom()
+                            binding.statusTextCrazy.getBackToTop()
+                            binding.statusAdditionalTextCrazy.getBackToTop()
                         }
-
-                    }
-                    else -> {
-                        if (currentStatus != 2){
-                            binding.statusText.setText(statusText[2])
-                            binding.statusAdditionalText.setText(additionalInfoText[2])
-                            currentStatus = 2
+                        MoneySpendInformation.NORMAL -> {
+                            binding.statusTextLot.showUpFromTop()
+                            binding.statusAdditionalTextLot.showUpFromTop()
+                            binding.statusTextNormal.getBackToBottom()
+                            binding.statusAdditionalTextNormal.getBackToBottom()
+                        }
+                        else -> {
+                            binding.statusTextLot.showUpFromTop()
+                            binding.statusAdditionalTextLot.showUpFromTop()
                         }
                     }
                 }
+                MoneySpendInformation.CRAZY -> {
+                    binding.statusTextCrazy.showUpFromTop()
+                    binding.statusAdditionalTextCrazy.showUpFromTop()
+                    if (budgetGoalViewModel.lastStatus == MoneySpendInformation.NORMAL) {
+                        binding.statusTextNormal.getBackToBottom()
+                        binding.statusAdditionalTextNormal.getBackToBottom()
+                    } else if (budgetGoalViewModel.lastStatus == MoneySpendInformation.LOT) {
+                        binding.statusTextLot.getBackToBottom()
+                        binding.statusAdditionalTextLot.getBackToBottom()
+                    }
+                }
+                else -> {
+                }
             }
         })
+        budgetGoalViewModel.curValue.observe(viewLifecycleOwner, { moneyValue ->
+            budgetGoalViewModel.updateCurStatus(moneyValue)
+            updateMoneyTextView(moneyValue)
+        })
+    }
 
-        binding.statusText.setFactory {
-            val textView = TextView(requireContext())
-            textView.setTextColor(Color.WHITE)
-            textView.textSize = resources.getDimension(R.dimen.text_size_small)/ resources.displayMetrics.density
-            textView.setTypeface(null, Typeface.BOLD);
-            textView
+    private fun initAnimator() {
+        textViewAlphaAnimator =
+            ValueAnimator.ofFloat(binding.moneyText.alpha, FADE_ALPHA_MONEY_TEXT, FULL_ALPHA)
+                .apply {
+                    addUpdateListener { updateAnimation ->
+                        binding.moneyText.alpha = updateAnimation.animatedValue as Float
+                    }
+                    interpolator = decelerateInterpolator
+                    duration = LONG_ANIMATION_DURATION
+                }
+    }
+
+    private fun initView() {
+        binding.buttonSave.setOnClickListener {
+            budgetGoalViewModel.updateDatabase(binding.sliderBar.curMoney)
         }
 
-        binding.statusAdditionalText.setFactory {
-            val textView = TextView(requireContext())
-            textView.setTextColor(Color.WHITE)
-            textView.textSize = resources.getDimension(R.dimen.text_size_super_small)/ resources.displayMetrics.density
-            textView
+        binding.horizontalScrollView.onSwipeListener = object : CategoryScrollView.OnSwipeListener {
+            override fun onCategoryChange(item: SingleItem) {
+                budgetGoalViewModel.setCurrentValue(item.value)
+                binding.sliderBar.curMoney = item.value
+                budgetGoalViewModel.currentCategory.value = item
+            }
+        }
+
+        binding.sliderBar.setOnValueChangeListener(object :
+            SlideBarHorizontal.OnValueChangeListener {
+            override fun onValueChange(currentValue: Int) {
+                updateMoneyTextView(currentValue)
+                animationAnchor()
+                budgetGoalViewModel.setCurrentValue(currentValue)
+            }
+        })
+    }
+
+    private fun animationAnchor() {
+        anchorScaleAnimator?.cancel()
+        val anchorScaleXAnimator =
+            ObjectAnimator.ofFloat(
+                binding.anchor,
+                View.SCALE_X,
+                ANCHOR_MAX_SCALE,
+                ANCHOR_NORMAL_SCALE
+            )
+        val anchorScaleYAnimator =
+            ObjectAnimator.ofFloat(
+                binding.anchor,
+                View.SCALE_Y,
+                ANCHOR_MAX_SCALE,
+                ANCHOR_NORMAL_SCALE
+            )
+
+        anchorScaleAnimator = AnimatorSet().apply {
+            playTogether(anchorScaleXAnimator, anchorScaleYAnimator)
+            interpolator = decelerateInterpolator
+            start()
         }
     }
 
@@ -140,16 +174,15 @@ class BudgetGoalFragment : Fragment() {
         textViewAlphaAnimator.cancel()
         textViewMoneyAnimator?.cancel()
 
-        textViewMoneyAnimator = ValueAnimator.ofInt(binding.moneyText.text.toString().toInt(), newValue).apply {
-            addUpdateListener { updateAnimation ->
-                binding.moneyText.text = (updateAnimation.animatedValue as Int).toString()
+        textViewMoneyAnimator =
+            ValueAnimator.ofInt(binding.moneyText.text.toString().toInt(), newValue).apply {
+                addUpdateListener { updateAnimation ->
+                    binding.moneyText.text = (updateAnimation.animatedValue as Int).toString()
+                }
+                interpolator = decelerateInterpolator
+                duration = LONG_ANIMATION_DURATION
             }
-            interpolator = decelerateInterpolator
-            duration = 600
-        }
-
         textViewMoneyAnimator?.start()
         textViewAlphaAnimator.start()
-
     }
 }

@@ -12,6 +12,5 @@
         <attr name="gapSize" format="dimension"/>
         <attr name="startPadding" format="dimension"/>
         <attr name="barColor" format="color"/>
-        <attr name="anchorColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -46,8 +46,7 @@
         android:id="@+id/sliderBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_margin"
-        app:anchorColor="@color/anchor_color"
+        android:layout_marginTop="@dimen/normal_margin"
         app:barColor="@color/white"
         app:gapSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +55,18 @@
         app:moneyValue="3000"
         app:startPadding="@dimen/large_margin" />
 
-    <Button
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="@dimen/anchor_width"
+        android:layout_height="@dimen/anchor_height"
+        android:layout_marginStart="@dimen/anchor_margin_start"
+        android:background="@drawable/background_anchor"
+        app:layout_constraintBottom_toBottomOf="@id/sliderBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sliderBar" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonSave"
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:layout_marginEnd="@dimen/normal_margin"
@@ -92,7 +102,7 @@
         android:layout_marginStart="@dimen/large_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/large_margin"
-        android:text="@string/total_budget_is_1500"
+        android:text="@string/total_budget_code"
         android:textColor="@color/gray"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,42 +141,105 @@
         android:text="@string/_0"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintStart_toEndOf="@id/moneySign"
         app:layout_constraintTop_toTopOf="@+id/guideline1" />
 
 
-    <TextSwitcher
-        android:id="@+id/statusText"
+    <TextView
+        android:id="@+id/statusTextNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/large_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/large_margin"
-        android:inAnimation="@anim/slide_in_from_top"
-        android:outAnimation="@anim/slide_away_to_bottom"
+        android:alpha="0"
+        android:text="@string/normal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sliderBar">
+        app:layout_constraintTop_toBottomOf="@+id/sliderBar" />
 
-
-    </TextSwitcher>
-
-
-    <TextSwitcher
-        android:id="@+id/statusAdditionalText"
+    <TextView
+        android:id="@+id/statusTextLot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/large_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/large_margin"
-        android:inAnimation="@anim/slide_in_from_top"
-        android:outAnimation="@anim/slide_away_to_bottom"
+        android:alpha="0"
+        android:text="@string/that_s_a_lot"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText">
+        app:layout_constraintTop_toBottomOf="@+id/sliderBar" />
 
-    </TextSwitcher>
+    <TextView
+        android:id="@+id/statusTextCrazy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:alpha="0"
+        android:text="@string/are_you_crazy"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sliderBar" />
+
+
+    <TextView
+        android:id="@+id/statusAdditionalTextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:alpha="0"
+        android:text="@string/it_s_ok_to_eat_at_your_place_nup_to_5_of_economy"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_super_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusTextNormal" />
+
+    <TextView
+        android:id="@+id/statusAdditionalTextLot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:alpha="0"
+        android:text="@string/sometimes_you_can_eat_in_cafe_nup_to_3_of_economy"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_super_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusTextLot" />
+
+    <TextView
+        android:id="@+id/statusAdditionalTextCrazy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:alpha="0"
+        android:text="@string/eat_in_restaurants_everyday_nblow_off_30_of_money"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_super_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusTextCrazy" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

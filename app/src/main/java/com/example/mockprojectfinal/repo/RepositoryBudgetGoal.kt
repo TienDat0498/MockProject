@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.mockprojectfinal.data.entity.Category
 
 interface RepositoryBudgetGoal {
-    suspend fun getCategories(): LiveData<List<Category>>
+    fun getCategories(): LiveData<List<Category>>
 
     suspend fun saveCategory(category: Category)
 

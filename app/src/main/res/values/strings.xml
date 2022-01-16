@@ -3,10 +3,16 @@
     <string name="save">Save</string>
     <string name="set_up_a_monthly_budget_goal">Set up a monthly \nbudget goal</string>
     <string name="total_budget_is_1500">Total budget is <b>$ 1500</b></string>
+    <string name="total_budget_code">Total budget is <b><font color="#FF000000">$ 1500</font></b></string>
     <string name="_400">$ <font color="#000000">400</font></string>
     <string name="money_text">$ %s</string>
     <string name="money_sign">$</string>
     <string name="normal">Normal</string>
     <string name="it_s_ok_to_eat_at_your_placeup_to_5_of_economy">It\'s ok to eat at your place\nUp to 5% of economy</string>
     <string name="_0">0</string>
+    <string name="that_s_a_lot">That\'s a lot</string>
+    <string name="are_you_crazy">Are you crazy</string>
+    <string name="it_s_ok_to_eat_at_your_place_nup_to_5_of_economy">It\'s ok to eat at your place\nUp to 5% of economy</string>
+    <string name="sometimes_you_can_eat_in_cafe_nup_to_3_of_economy">Sometimes, you can eat in cafe\nUp to 3% of economy</string>
+    <string name="eat_in_restaurants_everyday_nblow_off_30_of_money">Eat in restaurants everyday\nBlow off 30% of money</string>
 </resources>

@@ -27,6 +27,13 @@ internal class ExpandSlideView
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
+    companion object {
+        const val DEFAULT_ANIMATION_DURATION = 300L
+        const val SHORT_ANIMATION_DURATION = 250L
+        const val LONG_ANIMATION_DURATION = 350L
+        const val VERY_LONG_ANIMATION_DURATION = 600L
+    }
+
     private var currentItem: Int = 0
     private val listViewHolder = mutableListOf<ViewHolder>()
     var oneNormalItemWidth = Int.MAX_VALUE
@@ -34,23 +41,27 @@ internal class ExpandSlideView
     var data: List<SingleItem>? = null
         set(value) {
             if (value == null) return
+            listViewHolder.clear()
             for (singleItem in value) {
                 val newViewHolder = ViewHolder.create(singleItem, this)
                 listViewHolder.add(newViewHolder)
                 addView(newViewHolder.view)
             }
             field = value
-            currentItem = 0
-            listViewHolder[currentItem].setCurrentView()
+            if (value.isNotEmpty()) {
+
+                if (currentItem >= value.size)
+                    currentItem = 0
+                listViewHolder[currentItem].setCurrentView()
+            }
             requestLayout()
         }
 
-
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        var curWidth = 0
-        var curHeight = 0
-        var curLeft = 0
-        var curTop = 0
+        var curWidth: Int
+        var curHeight: Int
+        var curLeft: Int
+        val curTop: Int
 
         val childLeft = this.paddingLeft
         val childTop = this.paddingTop
@@ -59,10 +70,8 @@ internal class ExpandSlideView
         val childWidth = childRight - childLeft
         val childHeight = childBottom - childTop
 
-
         curLeft = childLeft
         curTop = childTop
-
         for (idx in 0 until childCount) {
             val childView: View = getChildAt(idx)
             if (childView.visibility == View.GONE) {
@@ -82,11 +91,10 @@ internal class ExpandSlideView
         }
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
-        var maxHeight: Int = 0
-        var maxWidth: Int = 0
+        var maxHeight = 0
+        var maxWidth = 0
 
         val paddingVertical = this.paddingTop + this.paddingBottom
         val paddingHorizontal = this.paddingStart + this.paddingEnd
@@ -130,28 +138,19 @@ internal class ExpandSlideView
         private lateinit var item: SingleItem
 
         private lateinit var currentLayoutBackgroundAnimator: ValueAnimator
-
         private lateinit var currentIconTintAnimator: ValueAnimator
-
         private lateinit var currentIconBackGroundAnimator: ValueAnimator
 
         private lateinit var notCurrentLayoutBackgroundAnimator: ValueAnimator
-
         private lateinit var notCurrentIconTintAnimator: ValueAnimator
-
         private lateinit var notCurrentIconBackGroundAnimator: ValueAnimator
 
-
         private lateinit var showUpAnimator: AnimatorSet
-
         private lateinit var getDownAnimator: AnimatorSet
-
         private lateinit var revealTransition: Transition
-
         private lateinit var hideTransition: Transition
 
         private var isCurrent = false
-
 
         companion object {
             fun create(singleItem: SingleItem, parent: ViewGroup): ViewHolder {
@@ -159,9 +158,11 @@ internal class ExpandSlideView
                     .inflate(R.layout.sliding_category_item, parent, false)
                 return ViewHolder(view).apply {
                     initView(singleItem, parent.context)
-                    initAnimator(parent.context)
+                    initAnimator()
                 }
             }
+
+            val DEFAULT_BACKGROUND_COLOR = Color.parseColor("#f8f8f8")
         }
 
         private fun initView(singleItem: SingleItem, context: Context) {
@@ -169,9 +170,8 @@ internal class ExpandSlideView
             imageIconCurrent.setImageResource(singleItem.icon)
             imageIconCurrent.setColorFilter(Color.parseColor(singleItem.colorFirst))
             imageIconCurrent.setBackgroundColor(Color.WHITE)
-            layoutCurrent.setBackgroundColor(Color.WHITE)
+            layoutCurrent.setBackgroundColor(DEFAULT_BACKGROUND_COLOR)
             textCategoryName.text = singleItem.name
-
 
             val formatter: NumberFormat = DecimalFormat("#,###")
             val formattedNumber: String = formatter.format(singleItem.value)
@@ -181,20 +181,19 @@ internal class ExpandSlideView
             textCategoryExpand.visibility = View.GONE
         }
 
-        private fun initAnimator(context: Context) {
+        private fun initAnimator() {
             currentLayoutBackgroundAnimator =
-                ValueAnimator.ofArgb(Color.WHITE, Color.parseColor(item.colorFirst)).apply {
-                    startDelay = 300
-                    duration = 300
+                ValueAnimator.ofArgb(DEFAULT_BACKGROUND_COLOR, Color.parseColor(item.colorFirst)).apply {
+                    startDelay = DEFAULT_ANIMATION_DURATION
+                    duration = DEFAULT_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         layoutCurrent.setBackgroundColor(updateAnimation.animatedValue as Int)
                     }
-
                 }
 
             currentIconTintAnimator =
                 ValueAnimator.ofArgb(Color.parseColor(item.colorFirst), Color.WHITE).apply {
-                    duration = 300
+                    duration = DEFAULT_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         imageIconCurrent.setColorFilter(updateAnimation.animatedValue as Int)
                     }
@@ -202,16 +201,16 @@ internal class ExpandSlideView
 
             currentIconBackGroundAnimator =
                 ValueAnimator.ofArgb(Color.WHITE, Color.parseColor(item.colorSecond)).apply {
-                    startDelay = 300
-                    duration = 300
+                    startDelay = DEFAULT_ANIMATION_DURATION
+                    duration = DEFAULT_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         imageIconCurrent.setBackgroundColor(updateAnimation.animatedValue as Int)
                     }
                 }
 
             notCurrentLayoutBackgroundAnimator =
-                ValueAnimator.ofArgb(Color.parseColor(item.colorFirst), Color.WHITE).apply {
-                    duration = 350
+                ValueAnimator.ofArgb(Color.parseColor(item.colorFirst), DEFAULT_BACKGROUND_COLOR).apply {
+                    duration = LONG_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         layoutCurrent.setBackgroundColor(updateAnimation.animatedValue as Int)
                     }
@@ -219,8 +218,8 @@ internal class ExpandSlideView
 
             notCurrentIconTintAnimator =
                 ValueAnimator.ofArgb(Color.WHITE, Color.parseColor(item.colorFirst)).apply {
-                    startDelay = 250
-                    duration = 350
+                    startDelay = SHORT_ANIMATION_DURATION
+                    duration = LONG_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         imageIconCurrent.setColorFilter(updateAnimation.animatedValue as Int)
                     }
@@ -228,7 +227,7 @@ internal class ExpandSlideView
 
             notCurrentIconBackGroundAnimator =
                 ValueAnimator.ofArgb(Color.parseColor(item.colorSecond), Color.WHITE).apply {
-                    duration = 250
+                    duration = SHORT_ANIMATION_DURATION
                     addUpdateListener { updateAnimation ->
                         imageIconCurrent.setBackgroundColor(updateAnimation.animatedValue as Int)
                     }
@@ -255,14 +254,13 @@ internal class ExpandSlideView
 
             revealTransition = ChangeBounds().apply {
                 interpolator = decelerateInterpolator
-                duration = 600
+                duration = VERY_LONG_ANIMATION_DURATION
             }
 
             hideTransition = ChangeBounds().apply {
                 interpolator = decelerateInterpolator
-                duration = 600
+                duration = VERY_LONG_ANIMATION_DURATION
             }
-
         }
 
         fun setCurrentView() {

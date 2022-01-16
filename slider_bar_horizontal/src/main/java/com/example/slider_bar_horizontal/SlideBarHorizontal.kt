@@ -3,18 +3,13 @@ package com.example.slidebar
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.core.content.withStyledAttributes
 import com.example.slider_bar_horizontal.R
-import kotlin.math.floor
+import kotlin.math.ceil
 
-private const val ANCHOR_STROKE_WIDTH = 16f
-private val ANCHOR_COLOR = Color.parseColor("#4ce2eb")
 
 class SlideBarHorizontal @JvmOverloads constructor(
     context: Context,
@@ -23,25 +18,23 @@ class SlideBarHorizontal @JvmOverloads constructor(
 ) : HorizontalScrollView(context, attrs, defStyleAttr) {
 
     interface OnValueChangeListener {
-        fun onValueChange(currentValue: Float)
+        fun onValueChange(currentValue: Int)
     }
 
-    private var moneyValue: Float = 1024f
-    private var gapSize: Float = 24f
-    private var startPadding: Float = 80f
-    private var barColor: Int = Color.WHITE
-    private var anchorColor: Int = ANCHOR_COLOR
-        set(value) {
-            field = value
-            paint.color = value
-        }
+    companion object {
+        const val DEFAULT_MONEY = 1024f
+        const val DEFAULT_GAP_SIZE = 24f
+        const val DEFAULT_START_PADDING = 80f
+        const val DEFAULT_BAR_COLOR = Color.WHITE
+    }
+
+    private var moneyValue: Float = DEFAULT_MONEY
+    private var gapSize: Float = DEFAULT_GAP_SIZE
+    private var startPadding: Float = DEFAULT_START_PADDING
+    private var barColor: Int = DEFAULT_BAR_COLOR
+
     private val slideBar = SlideBar(context)
     private var anchorBarLength: Float
-    private val anchorX: Float
-        get() = startPadding + scrollX
-
-//    private var motionTouchEventX: Float = 0f
-//    private var motionTouchEventY: Float = 0f
 
     private var onValueChangeListener: OnValueChangeListener? = null
 
@@ -52,22 +45,12 @@ class SlideBarHorizontal @JvmOverloads constructor(
         }
     }
 
-    var curMoney: Float = 0f
-        set(value){
-            smoothScrollTo((value/SlideBar.GAP_VALUE*gapSize).toInt(), scrollY)
+    var curMoney: Int = 0
+        set(value) {
+            smoothScrollTo(ceil(value.toFloat() / SlideBar.GAP_VALUE * gapSize).toInt(), scrollY)
             field = value
         }
-        get() = scrollX/ gapSize * SlideBar.GAP_VALUE
-
-    private val paint = Paint().apply {
-        textSize = 15f
-        color = barColor
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
-        strokeWidth = ANCHOR_STROKE_WIDTH
-    }
-
+        get() = ((scrollX.toFloat() / gapSize) * SlideBar.GAP_VALUE).toInt()
 
     init {
         isClickable = true
@@ -76,7 +59,6 @@ class SlideBarHorizontal @JvmOverloads constructor(
             gapSize = getDimension(R.styleable.SlideBarHorizontal_gapSize, 24f)
             startPadding = getDimension(R.styleable.SlideBarHorizontal_startPadding, 80f)
             barColor = getColor(R.styleable.SlideBarHorizontal_barColor, Color.WHITE)
-            anchorColor = getColor(R.styleable.SlideBarHorizontal_anchorColor, ANCHOR_COLOR)
         }
         slideBar.layoutParams =
             LayoutParams(LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -90,36 +72,5 @@ class SlideBarHorizontal @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawLine(
-            anchorX, (height - anchorBarLength) / 2,
-            anchorX, (height + anchorBarLength) / 2, paint
-        )
     }
-
-//    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        super.onTouchEvent(event)
-//        motionTouchEventX = event.x
-//        motionTouchEventY = event.y
-//
-//        when (event.action) {
-//            MotionEvent.ACTION_DOWN -> touchStart()
-//            MotionEvent.ACTION_MOVE -> touchMove()
-//            MotionEvent.ACTION_UP -> touchUp()
-//        }
-//        return true
-//    }
-//
-//    private fun touchStart() {
-//        onSliderBarChangeListener?.onClickStart()
-//    }
-//
-//    private fun touchMove() {
-//        onSliderBarChangeListener?.onClickProgress(curMoney)
-//    }
-//
-//    private fun touchUp() {
-////        smoothScrollTo((floor(scrollX / gapSize) * gapSize).toInt(), scrollY)
-//        onSliderBarChangeListener?.onClickStop()
-//
-//    }
 }

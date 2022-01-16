@@ -16,21 +16,31 @@ internal class SlideBar @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     companion object {
-        const val GAP_VALUE: Int = 10
+        const val GAP_SIZE = 24f
+        const val GAP_VALUE: Int = 25
         private const val STROKE_WIDTH = 4f
+        const val SHORT_BAR_GAP_SIZE_PROPORTION = 1f / 8f
+        const val LONG_BAR_GAP_SIZE_PROPORTION = 1f / 2f
+        const val LONG_BAR_PER_BAR = 4
+        const val VIEW_HEIGHT_GAP_SIZE_PROPORTION = 6
+
+        const val DEFAULT_MONEY = 1024f
+        const val DEFAULT_START_PADDING = 80f
+        const val DEFAULT_BAR_COLOR = Color.WHITE
+
     }
 
-    var moneyValue: Float = 1024f
-    var gapSize: Float = 24f
+    var moneyValue: Float = DEFAULT_MONEY
+    var gapSize: Float = GAP_SIZE
         set(value) {
             field = value
-            shortBar = gapSize / 8
-            longBar = gapSize / 2
+            shortBar = gapSize * SHORT_BAR_GAP_SIZE_PROPORTION
+            longBar = gapSize * LONG_BAR_GAP_SIZE_PROPORTION
         }
-    private var shortBar: Float = gapSize / 8
-    private var longBar: Float = gapSize / 2
-    var startPadding: Float = 80f
-    var barColor: Int = Color.WHITE
+    private var shortBar: Float = gapSize * SHORT_BAR_GAP_SIZE_PROPORTION
+    private var longBar: Float = gapSize * LONG_BAR_GAP_SIZE_PROPORTION
+    var startPadding: Float = DEFAULT_START_PADDING
+    var barColor: Int = DEFAULT_BAR_COLOR
         set(value) {
             field = value
             paint.color = value
@@ -46,10 +56,11 @@ internal class SlideBar @JvmOverloads constructor(
 
     init {
         context.withStyledAttributes(attrs, R.styleable.SlideBar) {
-            moneyValue = getFloat(R.styleable.SlideBar_moneyValueSlideBar, 1024f)
-            gapSize = getDimension(R.styleable.SlideBar_gapSizeSlideBar, 24f)
-            startPadding = getDimension(R.styleable.SlideBar_startPaddingSlideBar, 80f)
-            barColor = getColor(R.styleable.SlideBar_barColorSlideBar, Color.WHITE)
+            moneyValue = getFloat(R.styleable.SlideBar_moneyValueSlideBar, DEFAULT_MONEY)
+            gapSize = getDimension(R.styleable.SlideBar_gapSizeSlideBar, GAP_SIZE)
+            startPadding =
+                getDimension(R.styleable.SlideBar_startPaddingSlideBar, DEFAULT_START_PADDING)
+            barColor = getColor(R.styleable.SlideBar_barColorSlideBar, DEFAULT_BAR_COLOR)
         }
     }
 
@@ -57,7 +68,7 @@ internal class SlideBar @JvmOverloads constructor(
         super.onDraw(canvas)
         var xDimen = startPadding
         for (i in 0..(moneyValue / GAP_VALUE).toInt()) {
-            if (i % 5 == 0)
+            if (i % LONG_BAR_PER_BAR == 0)
                 canvas.drawLine(
                     xDimen,
                     (height - longBar) / 2,
@@ -88,7 +99,7 @@ internal class SlideBar @JvmOverloads constructor(
         val height: Int
 
         //Measure Width
-        when(widthMode){
+        when (widthMode) {
             MeasureSpec.EXACTLY -> {
                 // For further implementation, complete this path, by default
                 // only use self define height and width
@@ -110,7 +121,7 @@ internal class SlideBar @JvmOverloads constructor(
         }
 
         //Measure Height
-        when(heightMode){
+        when (heightMode) {
             MeasureSpec.EXACTLY -> {
                 // For further implementation, complete this path, by default
                 // only use self define height and width
@@ -119,9 +130,9 @@ internal class SlideBar @JvmOverloads constructor(
                             "wrap_content of horizontal scroll view"
                 )
             }
-            MeasureSpec.AT_MOST-> {
+            MeasureSpec.AT_MOST -> {
                 // for using in horizontal scroll view, mode will be at most of height
-                height = (gapSize * 6).toInt()
+                height = (gapSize * VIEW_HEIGHT_GAP_SIZE_PROPORTION).toInt()
             }
 
             else -> {

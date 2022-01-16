@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/drawable/background_anchor.xml" value="0.10648148148148148" />
         <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/drawable/background_button.xml" value="0.31875" />
         <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/drawable/background_top_left_corner_round.xml" value="0.31875" />
+        <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/drawable/ic_launcher_background.xml" value="0.11302083333333333" />
         <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/drawable/ic_other.xml" value="0.34010416666666665" />
         <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/layout/activity_main.xml" value="0.28306159420289856" />
-        <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/layout/fragment_budget_goal.xml" value="0.28306159420289856" />
+        <entry key="..\:/Mock/MockProjectFinal/app/src/main/res/layout/fragment_budget_goal.xml" value="0.33" />
         <entry key="..\:/Mock/MockProjectFinal/category_slider/src/main/res/drawable/ic_taxi.xml" value="0.31875" />
         <entry key="..\:/Mock/MockProjectFinal/category_slider/src/main/res/layout/sliding_category_item.xml" value="0.2957427536231884" />
       </map>
