@@ -16,13 +16,13 @@ internal class SlideBar @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     companion object {
-        const val GAP_SIZE = 24f
+        const val GAP_SIZE = 40f
         const val GAP_VALUE: Int = 25
         private const val STROKE_WIDTH = 4f
-        const val SHORT_BAR_GAP_SIZE_PROPORTION = 1f / 8f
-        const val LONG_BAR_GAP_SIZE_PROPORTION = 1f / 2f
+        const val SHORT_BAR_GAP_SIZE_PROPORTION = 1f / 10f
+        const val LONG_BAR_GAP_SIZE_PROPORTION = 1f / 3f
         const val LONG_BAR_PER_BAR = 4
-        const val VIEW_HEIGHT_GAP_SIZE_PROPORTION = 6
+        const val VIEW_HEIGHT_GAP_SIZE_PROPORTION = 3
 
         const val DEFAULT_MONEY = 1024f
         const val DEFAULT_START_PADDING = 80f

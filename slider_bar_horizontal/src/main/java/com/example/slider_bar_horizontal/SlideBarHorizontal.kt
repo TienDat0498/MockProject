@@ -23,7 +23,7 @@ class SlideBarHorizontal @JvmOverloads constructor(
 
     companion object {
         const val DEFAULT_MONEY = 1024f
-        const val DEFAULT_GAP_SIZE = 24f
+        const val DEFAULT_GAP_SIZE = 40f
         const val DEFAULT_START_PADDING = 80f
         const val DEFAULT_BAR_COLOR = Color.WHITE
     }

@@ -25,7 +25,7 @@ class BudgetGoalFragment : Fragment() {
         const val FADE_ALPHA_MONEY_TEXT = 0.1f
         const val FULL_ALPHA = 1f
         const val LONG_ANIMATION_DURATION = 600L
-        const val ANCHOR_MAX_SCALE = 1.3f
+        const val ANCHOR_MAX_SCALE = 1.15f
         const val ANCHOR_NORMAL_SCALE = 1f
     }
 

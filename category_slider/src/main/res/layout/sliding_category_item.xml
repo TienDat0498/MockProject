@@ -10,8 +10,8 @@
         android:id="@+id/layoutCurrent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="10dp"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,11 +26,12 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/imageIconViewCurrent"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
-                android:layout_margin="8dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
                 android:scaleType="centerInside"
-                app:cardCornerRadius="10dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/textCategoryName"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/purple_500"
-                    android:padding="8dp"
+                    android:padding="16dp"
                     app:srcCompat="@drawable/ic_example_category_slider"
                     app:tint="@color/white" />
             </androidx.cardview.widget.CardView>
@@ -51,7 +52,6 @@
                 android:layout_width="78dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/textCategoryExpand"
@@ -62,7 +62,7 @@
 
             <TextView
                 android:id="@+id/textCategoryExpand"
-                android:layout_width="wrap_content"
+                android:layout_width="78dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:textColor="@color/white"

@@ -9,4 +9,5 @@ object Constant {
     const val TEXT_TRANSITION_BOTTOM = 100f
     const val TEXT_ALPHA_FADE = 0f
     const val TEXT_ALPHA_SHOW = 1f
+    const val LONG_ANIMATION_DURATION = 600L
 }
